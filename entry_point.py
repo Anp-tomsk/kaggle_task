@@ -1,5 +1,10 @@
 from models import Constants
 from models.AppointmentInfo import build_info
+from pymongo import MongoClient
+
+
+client = MongoClient()
+context = client.appointment_info
 
 
 def input_to_dict(line):
@@ -26,6 +31,10 @@ def input_to_dict(line):
 if __name__ == "__main__":
     with open('data/medical_appointment.csv', 'r') as iFile:
 
+        training_set = []
+        hidden_set = []
+        validation_set = []
+
         for i, line in enumerate(iFile.readlines()):
             if i == 0:
                 continue
@@ -34,13 +43,25 @@ if __name__ == "__main__":
                 #To training dict
                 args = input_to_dict(line)
                 info = build_info(**args)
+                training_set.append(info.__dict__)
 
             if Constants.TRAINING_SET_RANGE <= i < Constants.VALIDATION_SET_RANGE:
                 #To validation dict
                 args = input_to_dict(line)
                 info = build_info(**args)
+                validation_set.append(info.__dict__)
 
             if i >= Constants.VALIDATION_SET_RANGE:
                 #To hidden set
                 args = input_to_dict(line)
                 info = build_info(**args)
+                hidden_set.append(info.__dict__)
+
+        collection = context.training_set
+        collection.insert_many(training_set)
+
+        collection = context.validation_set_range
+        collection.insert_many(validation_set)
+
+        collection = context.hidden_set
+        collection.insert_many(hidden_set)

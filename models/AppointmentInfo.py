@@ -1,4 +1,3 @@
-from enum import Enum
 from models import Constants
 import time
 
@@ -15,7 +14,7 @@ mapping_info = {Constants.AGE: lambda value: int(value),
 
 
 def date_from_str(value):
-    return time.strptime(value[0:10], "%Y-%m-%d")
+    return str(time.strptime(value[0:10], "%Y-%m-%d"))
 
 
 def get_diseases(kwargs):
@@ -23,55 +22,41 @@ def get_diseases(kwargs):
     for key, value in kwargs.items():
         if key.lower() == Constants.DIABETES:
             if bool(value):
-                diseases.append(Diseases.DIABETES)
+                diseases.append(Constants.DIABETES)
         if key.lower() == Constants.ALCOHOLISM:
             if bool(value):
-                diseases.append(Diseases.ALCOHOLISM)
+                diseases.append(Constants.ALCOHOLISM)
         if key.lower() == Constants.HYPER_TENSION:
             if bool(value):
-                diseases.append(Diseases.HYPER_TENSION)
+                diseases.append(Constants.HYPER_TENSION)
         if key.lower() == Constants.HANDICAP:
             if bool(value):
-                diseases.append(Diseases.HANDICAP)
+                diseases.append(Constants.HANDICAP)
         if key.lower() == Constants.SMOKES:
             if bool(value):
-                diseases.append(Diseases.SMOKES)
+                diseases.append(Constants.SMOKES)
         if key.lower() == Constants.SCHOLARSHIP:
             if bool(value):
-                diseases.append(Diseases.SCHOLARSHIP)
+                diseases.append(Constants.SCHOLARSHIP)
         if key.lower() == Constants.TUBERCULOSIS:
             if bool(value):
-                diseases.append(Diseases.TUBERCULOSIS)
+                diseases.append(Constants.TUBERCULOSIS)
+
+    return diseases
 
 
 def gender_from_str(value):
     if value == "F" or value == "f":
-        return Gender.FEMALE
+        return "FEMALE"
 
     if value == "M" or value == "m":
-        return Gender.MALE
+        return "MALE"
 
-    return Gender.UNDEF
+    return "UNDEF"
 
 
 def show_up_from_str(value):
     return value.lower() == "show-up"
-
-
-class Gender(Enum):
-    MALE = 1,
-    FEMALE = 2,
-    UNDEF = 3
-
-
-class Diseases(Enum):
-    DIABETES = 1,
-    ALCOHOLISM = 2,
-    HYPER_TENSION = 3,
-    HANDICAP = 4,
-    SMOKES = 5,
-    SCHOLARSHIP = 6,
-    TUBERCULOSIS = 7
 
 
 def build_info(**kwargs):
@@ -84,3 +69,4 @@ class AppointmentInfo:
             if key in mapping_info:
                 value = kwargs[key]
                 setattr(self, key, mapping_info[key](value))
+
