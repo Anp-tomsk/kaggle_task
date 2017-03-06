@@ -14,32 +14,32 @@ mapping_info = {Constants.AGE: lambda value: int(value),
 
 
 def date_from_str(value):
-    return str(time.strptime(value[0:10], "%Y-%m-%d"))
+    return value[0:10]
 
 
 def get_diseases(kwargs):
     diseases = []
     for key, value in kwargs.items():
         if key.lower() == Constants.DIABETES:
-            if bool(value):
+            if value == "1":
                 diseases.append(Constants.DIABETES)
         if key.lower() == Constants.ALCOHOLISM:
-            if bool(value):
+            if value == "1":
                 diseases.append(Constants.ALCOHOLISM)
         if key.lower() == Constants.HYPER_TENSION:
-            if bool(value):
+            if value == "1":
                 diseases.append(Constants.HYPER_TENSION)
         if key.lower() == Constants.HANDICAP:
-            if bool(value):
+            if value == "1":
                 diseases.append(Constants.HANDICAP)
         if key.lower() == Constants.SMOKES:
-            if bool(value):
+            if value == "1":
                 diseases.append(Constants.SMOKES)
         if key.lower() == Constants.SCHOLARSHIP:
-            if bool(value):
+            if value == "1":
                 diseases.append(Constants.SCHOLARSHIP)
         if key.lower() == Constants.TUBERCULOSIS:
-            if bool(value):
+            if value == "1":
                 diseases.append(Constants.TUBERCULOSIS)
 
     return diseases
