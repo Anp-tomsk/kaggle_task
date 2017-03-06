@@ -1,3 +1,6 @@
+TRAINING_SET_RANGE = 2*10**6
+VALIDATION_SET_RANGE = 2*10**6 + 5*10**5
+
 AGE = "age"
 GENDER = "gender"
 DATE_OF_REGISTRATION = "date_of_registration"
