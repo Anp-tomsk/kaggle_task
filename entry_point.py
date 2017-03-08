@@ -15,6 +15,7 @@ def input_to_dict(line):
         Constants.DATE_OF_REGISTRATION: args[2].strip(),
         Constants.APPOINTMENT_DATE: args[3].strip(),
         Constants.DAY_OF_WEEK: args[4].strip(),
+        Constants.SHOW_UP: args[5].strip(),
         Constants.DISEASES : {
             Constants.DIABETES: args[6].strip(),
             Constants.ALCOHOLISM: args[7].strip(),
@@ -43,19 +44,19 @@ if __name__ == "__main__":
                 #To training dict
                 args = input_to_dict(line)
                 info = build_info(**args)
-                training_set.append(info.__dict__)
+                training_set.append(info)
 
             if Constants.TRAINING_SET_RANGE <= i < Constants.VALIDATION_SET_RANGE:
                 #To validation dict
                 args = input_to_dict(line)
                 info = build_info(**args)
-                validation_set.append(info.__dict__)
+                validation_set.append(info)
 
             if i >= Constants.VALIDATION_SET_RANGE:
                 #To hidden set
                 args = input_to_dict(line)
                 info = build_info(**args)
-                hidden_set.append(info.__dict__)
+                hidden_set.append(info)
 
         collection = context.training_set
         collection.insert_many(training_set)
