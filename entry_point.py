@@ -16,7 +16,7 @@ def input_to_dict(line):
         Constants.APPOINTMENT_DATE: args[3].strip(),
         Constants.DAY_OF_WEEK: args[4].strip(),
         Constants.SHOW_UP: args[5].strip(),
-        Constants.DISEASES : {
+        Constants.DISEASES: {
             Constants.DIABETES: args[6].strip(),
             Constants.ALCOHOLISM: args[7].strip(),
             Constants.HYPER_TENSION: args[8].strip(),

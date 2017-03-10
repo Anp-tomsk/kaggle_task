@@ -1,5 +1,5 @@
 from models import Constants
-from datetime import datetime
+from mapping import training_mapper
 
 
 entity_mapping_info = {Constants.AGE: lambda value: int(value),
@@ -73,84 +73,11 @@ def to_entity(**kwargs):
     return entity
 
 
-def truncate_age(age):
-    value = int(age)
-
-    if value < 5:
-        return "Before 5"
-
-    if 5 <= value < 11:
-        return "From 5 to 11"
-
-    if 11 <= value < 16:
-        return "From 11 to 16"
-
-    if 16 <= value < 20:
-        return "From 16 to 20"
-
-    if 20 <= value < 30:
-        return "From 20 to 30"
-
-    if 30 <= value < 60:
-        return "From 30 to 60"
-
-    return "From 60 and older"
-
-
-def truncate_waiting_time(waiting_time):
-    value = abs(int(waiting_time))
-
-    if value < 5:
-        return "less then five"
-
-    if 5 <= value < 15:
-        return "from 5 to 15"
-
-    if 15 <= value < 30:
-        return "from 15 to 30"
-
-    return "more than 30"
-
-
-def registration_before(appointment_date, registration_date):
-    appointment_date = datetime.strptime(appointment_date, "%Y-%m-%d")
-    registration_date = datetime.strptime(registration_date, "%Y-%m-%d")
-
-    value = (appointment_date - registration_date).days
-
-    if value < 2:
-        return "before one day"
-
-    if 2 <= value < 7:
-        return "from 2 to 7 days"
-
-    if 7 <= value < 14:
-        return "from 7 to 14 days"
-
-    return "from 14 and upper"
-
-
 def to_training_model(entity):
-    age = entity[Constants.AGE]
-    appointment_date = entity[Constants.APPOINTMENT_DATE]
-    registration_date = entity[Constants.DATE_OF_REGISTRATION]
-    gender = entity[Constants.GENDER]
-    day_of_week = entity[Constants.DAY_OF_WEEK]
-    sms_reminder = entity[Constants.SMS_REMINDER]
-    time_of_waiting = entity[Constants.TIME_OF_WAITING]
-    disease = entity[Constants.DISEASES]
-
+    result = training_mapper.map(entity)
     showed_up = entity[Constants.SHOW_UP]
 
-    return {
-        Constants.AGE: truncate_age(age),
-        "registration_before": registration_before(appointment_date, registration_date),
-        Constants.GENDER: gender,
-        Constants.DAY_OF_WEEK: day_of_week,
-        Constants.SMS_REMINDER: sms_reminder,
-        "time_of_waiting": time_of_waiting,
-        Constants.DISEASES: disease
-    }, showed_up
+    return result, showed_up
 
 
 
