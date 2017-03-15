@@ -1,5 +1,6 @@
 from models import Constants
 from mapping import training_mapper
+from mapping.resolvers import *
 
 
 entity_mapping_info = {Constants.AGE: lambda value: int(value),
@@ -77,7 +78,57 @@ def to_training_model(entity):
     result = training_mapper.map(entity)
     showed_up = entity[Constants.SHOW_UP]
 
+    diseases = {(key, True) for key in entity[Constants.DISEASES]}
+    result.update(diseases)
+
     return result, showed_up
+
+
+def to_sklearn_model(entity):
+    feature_set = []
+
+    age = age_resolver(entity[Constants.AGE])
+    feature_set.append(age)
+
+    gender = 1 if entity[Constants.GENDER] == "M" else 0
+    feature_set.append(gender)
+
+    date_of_registration = entity[Constants.DATE_OF_REGISTRATION][0:10]
+    appointment_date = entity[Constants.APPOINTMENT_DATE][0:10]
+
+    registration_time = registration_time_resolver(appointment_date, date_of_registration)
+    feature_set.append(registration_time)
+
+    sms_reminder = int(entity[Constants.SMS_REMINDER])
+    feature_set.append(sms_reminder)
+
+    day_of_week = day_of_week_resolver(entity[Constants.DAY_OF_WEEK])
+    feature_set.append(day_of_week)
+
+    diabetes = int(entity[Constants.DIABETES])
+    feature_set.append(diabetes)
+
+    hipertension = int(entity[Constants.HYPER_TENSION])
+    feature_set.append(hipertension)
+
+    alcoolism = int(entity[Constants.ALCOHOLISM])
+    feature_set.append(alcoolism)
+
+    handcap = int(entity[Constants.HANDICAP])
+    feature_set.append(handcap)
+
+    smokes = int(entity[Constants.SMOKES])
+    feature_set.append(smokes)
+
+    tuberculosis = int(entity[Constants.TUBERCULOSIS])
+    feature_set.append(tuberculosis)
+
+    time_of_waiting = waiting_time_resolver(entity[Constants.TIME_OF_WAITING])
+    feature_set.append(time_of_waiting)
+
+    showed_up = 1 if entity[Constants.SHOW_UP] == "Show-Up" else 0
+    return showed_up, feature_set
+
 
 
 

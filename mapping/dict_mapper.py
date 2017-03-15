@@ -52,3 +52,60 @@ class Mapper:
                 result[key] = default_resolver(value)
 
         return result
+
+
+class DictToArrMapper:
+
+    def __init__(self):
+        self.keys_resolvers = []
+        self.ignored_keys = []
+        self.ignore_defaults = False
+
+    def for_key(self, key, resolver=default_resolver):
+        self.keys_resolvers.append((key, resolver))
+        return self
+
+    def ignore_not_resolved(self):
+        self.ignore_defaults = True
+        return self
+
+    def ignore_key(self, key):
+        self.ignored_keys.append(key)
+        return self
+
+    def map(self, in_dict):
+        result = []
+        for key, resolver in self.keys_resolvers:
+            if type(key) is list:
+                arg_dict = {}
+                for sub_key in key:
+                    arg_dict[sub_key] = in_dict[sub_key]
+                    self.ignored_keys.append(sub_key)
+
+                resolved_value = resolver(**arg_dict)
+                if type(resolved_value) is list:
+                    result.extend(resolved_value)
+                else:
+                    result.append(resolved_value)
+            else:
+                value = in_dict[key]
+
+                resolved_value = resolver(value)
+                if type(resolved_value) is list:
+                    result.extend(resolved_value)
+                else:
+                    result.append(resolved_value)
+
+                self.ignored_keys.append(key)
+
+        for key, value in in_dict.items():
+            if key not in self.ignored_keys:
+                resolved_value = default_resolver(value)
+                if type(resolved_value) is list:
+                    result.extend(resolved_value)
+                else:
+                    result.append(resolved_value)
+
+        return result
+
+

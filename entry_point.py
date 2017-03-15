@@ -3,8 +3,9 @@ from models.AppointmentInfo import build_info
 from pymongo import MongoClient
 
 
-client = MongoClient()
-context = client.appointment_info
+client = MongoClient(serverSelectionTimeoutMS=1000)
+client.server_info()
+context = client.sklearn_appointment
 
 
 def input_to_dict(line):
@@ -16,15 +17,13 @@ def input_to_dict(line):
         Constants.APPOINTMENT_DATE: args[3].strip(),
         Constants.DAY_OF_WEEK: args[4].strip(),
         Constants.SHOW_UP: args[5].strip(),
-        Constants.DISEASES: {
-            Constants.DIABETES: args[6].strip(),
-            Constants.ALCOHOLISM: args[7].strip(),
-            Constants.HYPER_TENSION: args[8].strip(),
-            Constants.HANDICAP: args[9].strip(),
-            Constants.SMOKES: args[10].strip(),
-            Constants.SCHOLARSHIP: args[11].strip(),
-            Constants.TUBERCULOSIS: args[12].strip()
-        },
+        Constants.DIABETES: args[6].strip(),
+        Constants.ALCOHOLISM: args[7].strip(),
+        Constants.HYPER_TENSION: args[8].strip(),
+        Constants.HANDICAP: args[9].strip(),
+        Constants.SMOKES: args[10].strip(),
+        Constants.SCHOLARSHIP: args[11].strip(),
+        Constants.TUBERCULOSIS: args[12].strip(),
         Constants.SMS_REMINDER: args[13].strip(),
         Constants.TIME_OF_WAITING: args[14].strip()
     }
@@ -43,20 +42,17 @@ if __name__ == "__main__":
             if i < Constants.TRAINING_SET_RANGE:
                 #To training dict
                 args = input_to_dict(line)
-                info = build_info(**args)
-                training_set.append(info)
+                training_set.append(args)
 
             if Constants.TRAINING_SET_RANGE <= i < Constants.VALIDATION_SET_RANGE:
                 #To validation dict
                 args = input_to_dict(line)
-                info = build_info(**args)
-                validation_set.append(info)
+                validation_set.append(args)
 
             if i >= Constants.VALIDATION_SET_RANGE:
                 #To hidden set
                 args = input_to_dict(line)
-                info = build_info(**args)
-                hidden_set.append(info)
+                hidden_set.append(args)
 
         collection = context.training_set
         collection.insert_many(training_set)
